@@ -1,0 +1,32 @@
+{
+  "name": "lexa_node",
+  "version": "1.0.0",
+  "description": "Truck loads",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "assert": "^1.4.1",
+    "bcryptjs": "^2.4.3",
+    "email-address": "^1.2.2",
+    "email-existence": "^0.1.6",
+    "email-validator": "^2.0.4",
+    "express": "^4.16.4",
+    "express-validator": "^5.3.1",
+    "http": "0.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.28",
+    "multer": "^1.4.2",
+    "nodemailer": "^6.4.11",
+    "nodemon": "^1.19.4",
+    "path": "^0.12.7",
+    "paypal-rest-sdk": "^1.8.1",
+    "socket.io": "^2.3.0"
+  },
+  "repository": {}
+}
