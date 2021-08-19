@@ -26,16 +26,16 @@ function generateAccessToken(user) {
 
 async function mailer(recipient) {
 
+    
+    
+        var mailOptions = {
+            from: config.gmail,
+            to: user.email,
+            subject: 'Reset Password Bheeshma Grocery',
+            text: `Your password reset code is ${token}`
+        };
 
-
-    var mailOptions = {
-        from: config.gmail,
-        to: user.email,
-        subject: 'Reset Password Bheeshma Grocery',
-        text: `Your password reset code is ${token}`
-    };
-
-    return transporter.sendMail(mailOptions)
+        return transporter.sendMail(mailOptions)
 
 }
 
@@ -44,21 +44,19 @@ exports.Signup = async (req, res, next) => {
 
 
     // const { firstName, lastName, email, password, role } = req.body;
-    const { emailAddress, telePhone, fullName, gender, addressStreet, addressCity, online, password, role, groupAssigned } = req.body;
+    const { emailAddress,telePhone,fullName,gender,addressStreet,addressCity,online,password, role,groupAssigned } = req.body;
 
     emailExistence.check(emailAddress, function (err, response) {
-        if (err) return res.status(400).json({ "error": "INTERNAL_SERVER", "msg": "Error in Validate Email", "status": false })
+        if (err) return res.status(400).json({"error": "INTERNAL_SERVER", "msg": "Error in Validate Email", "status": false })
         if (response === false) {
-            return res.status(400).json({ "error": "INVALID_EMAIL", "msg": "Please enter a valid Email address", "status": false })
+            return res.status(400).json({"error": "INVALID_EMAIL", "msg": "Please enter a valid Email address", "status": false })
         }
 
 
-        User.findOne({
-            $or: [
-                { emailAddress: emailAddress },
-                // {phone: phone}
-            ]
-        })
+        User.findOne({$or: [
+            {emailAddress: emailAddress},
+            // {phone: phone}
+        ]})
             .then(user => {
                 if (user) {
                     return res.status(400).json({ "error": "USER_EXISTS", "msg": "User Already Exists!", "status": false })
@@ -75,7 +73,7 @@ exports.Signup = async (req, res, next) => {
                             gender,
                             addressStreet,
                             addressCity,
-                            password: hashedPassword,
+                            password:hashedPassword,
                             role,
                             online,
                             groupAssigned
@@ -88,12 +86,12 @@ exports.Signup = async (req, res, next) => {
                             })
                             .catch(err => {
                                 console.log(err)
-                                return res.status(400).json({ "error": "INTERNAL_SERVER", "msg": "Error in Saving User", "status": false });
+                                return res.status(400).json({"error": "INTERNAL_SERVER", "msg": "Error in Saving User", "status": false });
                             })
                     })
                     .catch(err => {
                         console.log(err)
-                        return res.status(400).json({ "error": "INTERNAL_SERVER", "msg": err, "status": false });
+                        return res.status(400).json({"error": "INTERNAL_SERVER", "msg": err, "status": false });
                     })
 
             })
@@ -110,11 +108,11 @@ exports.Signin = async (req, res, next) => {
 
 
     const { emailAddress, password } = req.body;
-
+   
     const re = new RegExp(
         "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])+"
     );
-    let user
+        let user
     if (re.test(emailAddress)) {
         user = await User.findOne({ emailAddress });
     }
@@ -123,12 +121,12 @@ exports.Signin = async (req, res, next) => {
     // }
 
     if (!user) {
-        return res.status(401).json({ "error": "INVALID_USER", "msg": "User not found!", 'status': false })
+        return res.status(401).json({ "error": "INVALID_USER", "msg": "User not found!", 'status' : false })
     }
 
     user.comparePassword(password, async (err, isMatch) => {
         if (err) {
-            return res.status(400).json({ "error": "INTERNAL_SERVER", "msg": err, status: false })
+            return res.status(400).json({"error":"INTERNAL_SERVER", "msg": err, status: false })
         }
 
         if (!isMatch) {
@@ -141,6 +139,10 @@ exports.Signin = async (req, res, next) => {
 
         // return res.status(200).json({ "msg": "User loggedin successfully!", "user": user,  accessToken,  refreshToken , "status": true })
         return res.status(200).json({ "msg": "User loggedin successfully!", "user": user })
+
     })
+
+
+    
 }
 

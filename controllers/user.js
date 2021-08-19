@@ -26,13 +26,29 @@ exports.updateUser = async(req,res,next)=>{
         gender: req.body.gender ? req.body.gender : foundUser.gender,
         addressStreet: req.body.addressStreet ? req.body.addressStreet : foundUser.addressStreet,
         addressCity: req.body.addressCity ? req.body.addressCity : foundUser.addressCity,
-        addressStreet: req.body.addressStreet ? req.body.addressStreet : foundUser.addressStreet,
+        role: req.body.role ? req.body.role : foundUser.role,
       },
     }
   );
   res.send({user})
 } catch (err) {
-    res.status(500).send("Error in Fteching");
+    res.status(500).send("Error in Fetching");
 }
     
+}
+
+exports.getByroles= async(req,res,next)=>{
+  var data=req.query.data
+  console.log(data)
+  var pageNo = parseInt(req.query.pageNo)
+  var size = parseInt(req.query.size);
+  try{
+        let skip =size*(pageNo-1)
+        console.log(skip)
+        let limit = size;
+        let users = await User.find({role:data}).skip(skip).limit(limit)
+        res.json({users})
+  }catch (err){
+    res.status(500).send("Error in Fetching")
+  }
 }
