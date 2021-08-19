@@ -4,33 +4,59 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
 
 const userSchema = new Schema({
-
-    firstName: {
-        type: String,
-        required: true,
-        trim:true
-    },
-    lastName: {
-        type: String,
-        required: true,
-        trim:true
-    },
-    email: {
+    emailAddress: {
         type: String,
         unique: true,
         required: true,
         lowercase: true,
         trim: true
     },
+    telePhone: {
+        type: Number,
+        required: true,
+        trim:true
+    },
+    fullName: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    gender: {
+        type: String,
+        required: true,
+        trim:true
+    },
+    addressStreet:{
+        type: String,
+        required: true,
+        trim:true
+    },
+    addressCity:{
+        type: String,
+        required: true,
+        trim:true
+    },
     password: {
         type: String,
         required: true,
         trim: true
     },
+
     role: {
         type:String,
         required: true,
         trim: true
+    },
+    needsMedicalSupply:{
+        type: Boolean,
+        default:false
+    },
+    needsFoodSupply: {
+        type: Boolean,
+        default:false
+    },
+    groupAdded:{
+        type: Boolean  
     },
     online: {
         type: Boolean

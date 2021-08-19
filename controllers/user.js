@@ -21,11 +21,12 @@ exports.updateUser = async(req,res,next)=>{
     { _id: req.params.id },
     {
       $set: {
-        firstName: req.body.firstName ? req.body.firstName : foundUser.firstName,
-        lastName:req.body.lastName?req.body.lastName:foundUser.lastName,
-        email: req.body.email ? req.body.email : foundUser.email,
-        role: req.body.role ? req.body.role : foundUser.role,
-        password: req.body.password ? req.body.password : foundUser.password,
+        telePhone: req.body.telePhone ? req.body.telePhone : foundUser.telePhone,
+        fullName:req.body.fullName?req.body.fullName:foundUser.fullName,
+        gender: req.body.gender ? req.body.gender : foundUser.gender,
+        addressStreet: req.body.addressStreet ? req.body.addressStreet : foundUser.addressStreet,
+        addressCity: req.body.addressCity ? req.body.addressCity : foundUser.addressCity,
+        addressStreet: req.body.addressStreet ? req.body.addressStreet : foundUser.addressStreet,
       },
     }
   );
