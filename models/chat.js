@@ -21,7 +21,10 @@ const chatSchema = new Schema({
         type: Number,
         trim: true
     },
-    
+    active : { 
+        type : Boolean,
+        default:false
+    }
 },
     {
         timestamps: true,

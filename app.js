@@ -5,7 +5,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 const config = require("./config")
 
-
+const cors = require('cors');
 const port = process.env.PORT || 8000;
 const mongoose = require('mongoose');
 
@@ -14,7 +14,6 @@ const Socket = require('./socket')
 const MONGODB_URI = config.mongoUrl;
 
 const router = require('./routes/router')
-
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json())
 
@@ -22,6 +21,7 @@ app.use(express.static('uploads'));
 
 app.use('/public', express.static('public'));
 
+app.use(cors())
 
 Socket.init(io);
 

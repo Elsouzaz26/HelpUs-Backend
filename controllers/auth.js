@@ -6,6 +6,8 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const config = require('../config');
 const user = require('../models/user');
+var fs = require('fs');
+var path = require('path');
 
 var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -41,23 +43,30 @@ async function mailer(recipient) {
 
 
 exports.Signup = async (req, res, next) => {
-
+    console.log("body",req.body)
 
     // const { firstName, lastName, email, password, role } = req.body;
-    const { emailAddress,telePhone,fullName,gender,addressStreet,addressCity,online,password, role,groupAssigned } = req.body;
+    const { emailAddress,telePhone,fullName,gender,addressStreet,addressCity,password, role,groupAssigned, img} = req.body;
+
+    const image= {
+        data: fs.readFileSync(path.join('./uploads/' + req.file.filename)),
+        contentType: 'image/png'
+    }
 
     emailExistence.check(emailAddress, function (err, response) {
+
         if (err) return res.status(400).json({"error": "INTERNAL_SERVER", "msg": "Error in Validate Email", "status": false })
         if (response === false) {
             return res.status(400).json({"error": "INVALID_EMAIL", "msg": "Please enter a valid Email address", "status": false })
         }
 
 
-        User.findOne({$or: [
-            {emailAddress: emailAddress},
+        User.findOne({
+            emailAddress: emailAddress,
             // {phone: phone}
-        ]})
+        })
             .then(user => {
+                console.log("user",user)
                 if (user) {
                     return res.status(400).json({ "error": "USER_EXISTS", "msg": "User Already Exists!", "status": false })
                 }
@@ -75,7 +84,7 @@ exports.Signup = async (req, res, next) => {
                             addressCity,
                             password:hashedPassword,
                             role,
-                            online,
+                            img:image,
                             groupAssigned
                         })
 
@@ -112,13 +121,11 @@ exports.Signin = async (req, res, next) => {
     const re = new RegExp(
         "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])+"
     );
-        let user
+        let user;
     if (re.test(emailAddress)) {
         user = await User.findOne({ emailAddress });
     }
-    // } else {
-    //     user = await User.findOne({ phone: +email });
-    // }
+    
 
     if (!user) {
         return res.status(401).json({ "error": "INVALID_USER", "msg": "User not found!", 'status' : false })
@@ -132,17 +139,17 @@ exports.Signin = async (req, res, next) => {
         if (!isMatch) {
             return res.status(400).json({ "error": "INVALID_PASSWORD", "msg": "User Password Do Not Matched!", "status": false })
         }
-
-        // let tokenDetails = await createToken(user);
-
-        // do something with token
-
-        // return res.status(200).json({ "msg": "User loggedin successfully!", "user": user,  accessToken,  refreshToken , "status": true })
-        return res.status(200).json({ "msg": "User loggedin successfully!", "user": user })
-
-    })
-
-
     
+          
+            const token = jwt.sign({ user },"myTokenSecret" );
+              req.token = token;
+              const newUser = {
+                  token: req.token,
+                  user: user,
+                };
+        
+        return res.status(200).send(newUser)
+   
+    })
 }
 
