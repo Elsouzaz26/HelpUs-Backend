@@ -17,6 +17,7 @@ router.post('/signup', upload.single("img") ,authController.Signup);
 
 router.post('/signin', authController.Signin);
 
+router.get("/auth",authController.Verify)
 
 module.exports = {
   router: router,

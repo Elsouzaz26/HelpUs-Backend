@@ -7,21 +7,12 @@ exports.init = function(io) {
     io.on('connection', function(socket) {
         console.log('Connection Setup to socket');
 
-        socket.on('online', data => {
-            User
-                .findById(data.user)
-                .then((user) => {
-                    user.online = true;
-                    user.save();
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        })
         
         socket.on('join-room', data => {
 
-            // chat.id is coming in data.room
+            var rooms = io.sockets.adapter.sids[socket.id]; 
+            console.log(rooms)
+            
             socket.join(data.room);
             io.to(data.room).emit('room-joined', 'room Joined successfully!');
         })
@@ -32,7 +23,7 @@ exports.init = function(io) {
 
         })
 
-        socket.on('new-message', data => {
+        socket.on('new-message', async (data )=> {
             let messages = new Messages({
                 chat: data.room,
                 to: data.to,
@@ -40,6 +31,8 @@ exports.init = function(io) {
                 message: data.message
             })
 
+            const user1 = await User.findById(data.to)
+            const user2 = await User.findById(data.from)
 
             messages
                 .save()
@@ -48,14 +41,15 @@ exports.init = function(io) {
                 })
                 .then((chat) => {
                     chat.lastMsg = data.message;
-                    
+                    chat.createdAt = new Date()
                     return chat.save()
                 })
                 .then(() => {
+                    console.log(data.room)
                     io.to(data.room).emit('on-new-message', {
-                        chat: data.chat,
-                        to: data.to,
-                        from: data.from,
+                        chat: data.room,
+                        to: user1,
+                        from: user2,
                         message: data.message
                     });
                 })
@@ -67,19 +61,21 @@ exports.init = function(io) {
 
         // call on window.unloadEvent or logout
 
-        socket.on('disconnected', data => {
-            User
-                .findById(data.user)
-                .then((user) => {
-                    user.online= false;
-                    user.save()
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        })
+        // socket.on('disconnected', data => {
+        //     User
+        //         .findById(data.user)
+        //         .then((user) => {
+        //             user.online= false;
+        //             user.save()
+        //         })
+        //         .catch(err => {
+        //             console.log(err)
+        //         })
+        // })
 
         socket.on('disconnect', (data) => {
+
+            console.log(data)
             var rooms = io.sockets.adapter.sids[socket.id]; 
             for(var room in rooms) {       
                 socket.leave(room);     

@@ -29,4 +29,4 @@ const messageSchema = new Schema({
         versionKey: false
     })
 
-module.exports = mongoose.model("Messages", messageSchema, 'messages');
+module.exports = mongoose.model("Message", messageSchema, 'message');

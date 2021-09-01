@@ -41,7 +41,7 @@ const userSchema = new Schema({
         required: true,
         trim: true
     },
-    img: { data: Buffer, contentType: String },
+    img: { data: String, contentType: String },
     role: {
         type:String,
         required: true,
@@ -51,13 +51,25 @@ const userSchema = new Schema({
         type: Boolean,
         default:false
     },
+    location: {
+        lat: {
+            type: Number
+        },
+        lng: {
+            type: Number
+        }
+    },
     needsFoodSupply: {
         type: Boolean,
         default:false
     },
     groupAdded:{
         type: Boolean  
-    }
+    },
+    deliveryStatus:{
+        type:String
+    },
+    
 }, { timestamps: true, versionKey: false });
 
 userSchema.methods.comparePassword = function (candidatePassword, cb)  {

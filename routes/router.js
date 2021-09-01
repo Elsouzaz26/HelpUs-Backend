@@ -4,6 +4,11 @@ const routes = [
     // Routes here 
     'auth',
     'user',
+    'group',
+    'chat',
+    'message',
+    "blog",
+    "distribution"
 ]
 
 module.exports  = {
