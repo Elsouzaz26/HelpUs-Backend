@@ -84,6 +84,7 @@ exports.updateGroup = async(req,res,next)=>{
     console.log(req.body)
   try{
       const foundGroup = await Group.findById(req.params.id);
+      console.log(foundGroup)
       const group = await Group.updateOne(
   { _id: req.params.id },
   {
@@ -100,6 +101,7 @@ exports.updateGroup = async(req,res,next)=>{
 console.log(group)
 res.send({group})
 } catch (err) {
+    console.log(err)
   res.status(500).send("Error in Updating");
 }
   
@@ -107,11 +109,9 @@ res.send({group})
 
 
 exports.getGroupByCityAndDate = (req,res,next) => {
-    console.log(req.query)
-    let date = req.query.date.split("T")[0]
+    let date = req.body.date.split("T")[0]
 
-    console.log(date)
-    Group.find({city: req.query.city , createdAt: {$gte: date}}).then(response => {
+    Group.find({city: {$in:  req.body.city} , createdAt: {$gte: date}}).then(response => {
         res.status(200).send(response)
     }).catch(err => {
         console.log(err)
